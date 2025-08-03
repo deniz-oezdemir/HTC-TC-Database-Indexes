@@ -48,7 +48,7 @@ This structure changes the efficiency of a search:
 
 The B-Tree for our example program will look similar to this diagram:
 ![img.png](img.png)
-[*Source*](https://planetscale.com/blog/btrees-and-database-indexes)
+[*Image source*](https://planetscale.com/blog/btrees-and-database-indexes)
 
 ---
 
@@ -60,15 +60,15 @@ The B-Tree for our example program will look similar to this diagram:
 
 2.  Increase values in lines 20 and 21 in `Main.kt` by multiples of 10:
     ```kotlin
-    val userCount = 1_000                       // <- manipulate for simulation: first to 10_000, second to 100_000, ...
-    val targetEmail = "user500@example.com"     // <- manipulate for simulation: first to "user5000@example.com", second to first to "user50000@example.com", ...
+    val userCount = 1_000                       // <- manipulate for simulation: first to 10_000, second to 100_000, etc.
+    val targetEmail = "user500@example.com"     // <- manipulate for simulation: first to "user5000@example.com", second to "user50000@example.com", etc.
     ```
 
 3.  Run the `main` function.
 
 4.  Report the numbers to the group.
 
-5.  Repeat for all value pairs in the below Results Table.
+5.  Repeat for all value pairs in below Results Table.
 
 ### Results
 
