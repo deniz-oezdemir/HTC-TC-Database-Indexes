@@ -34,7 +34,7 @@ The magic of an index lies in its **B-Tree** structure and the dramatic impact i
 To see this in action, experiment with the interactive B-Tree visualization on [PlanetScale's blog](https://planetscale.com/blog/btrees-and-database-indexes).
 
 After creating a tree, compare the number of steps it takes to find a specific value using two different methods:
-- Linear Scan: Checking every value one-by-one from left to right.
+- Linear Scan: Checking every value one-by-one in the order they have been inserted.
 - Tree Traversal: Following the branches from the root node down to the target value.
 
 A B-Tree is a self-balancing tree data structure that keeps data sorted and is optimized for systems that read and write large blocks of data, like a database. When used for a database index it has a few key components:
