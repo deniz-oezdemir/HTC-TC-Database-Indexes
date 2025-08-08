@@ -58,10 +58,10 @@ The B-Tree for our example program will look similar to this diagram:
 
 ## Warnings, Edge Cases, and Common Mistakes
 
-- Index misuse: Adding indexes on every column slows down write performance and bloats storage. Only index columns you filter or join on frequently. 
-- Write-heavy workloads: In systems with frequent updates or inserts, too many indexes can cause significant performance issues. 
-- Wrong data type: If you use an index on a calculated or transformed field (e.g., LOWER(email)), the database may ignore the index unless you create a specific function-based index. 
-- Partial matches: Indexes on a single column help with exact matches, but not always with partial text searches unless the DB supports it (e.g., LIKE 'abc%' can use an index, but LIKE '%abc' usually cannot).
+* **Index misuse**: Adding indexes on every column slows down write performance and bloats storage. Only index columns you filter or join on frequently. 
+* **Write-heavy workloads**: In systems with frequent updates or inserts, too many indexes can cause significant performance issues. 
+* **Wrong data type**: If you use an index on a calculated or transformed field (e.g., `LOWER(email)`), the database may ignore the index unless you create a specific function-based index. 
+* **Partial matches**: Indexes on a single column help with exact matches, but not always with partial text searches unless the DB supports it (e.g., `LIKE 'abc%'` can use an index, but `LIKE '%abc'` usually cannot).
 
 ---
 
@@ -72,10 +72,10 @@ The B-Tree for our example program will look similar to this diagram:
 1.  Clone this repo.
 
 2.  Increase values in lines 20 and 21 in `Main.kt` by multiples of 10:
-    ```kotlin
+```kotlin
     val userCount = 1_000                       // <- manipulate for simulation: first to 10_000, second to 100_000, etc.
     val targetEmail = "user500@example.com"     // <- manipulate for simulation: first to "user5000@example.com", second to "user50000@example.com", etc.
-    ```
+```
 
 3.  Run the `main` function.
 
@@ -87,36 +87,36 @@ The B-Tree for our example program will look similar to this diagram:
 
 The following examples are from the actual simulation code.
 
-Example 1: Search without an index
+**Example 1**: Search without an index
 This query works, but it’s slow for large datasets. The database must scan every row in the Users table until it finds a match.
 
-```
-val timeWithoutIndex = measureTimeMillis {
-val rs = statement.executeQuery("SELECT * FROM Users WHERE email = '$targetEmail'")
-if (rs.next()) {
-println("Found user (without index): ${rs.getString("name")}")
-}
-}
-println("Time taken WITHOUT index: $timeWithoutIndex ms")
+```kotlin
+    val timeWithoutIndex = measureTimeMillis {
+        val rs = statement.executeQuery("SELECT * FROM Users WHERE email = '$targetEmail'")
+        if (rs.next()) {
+            println("Found user (without index): ${rs.getString("name")}")
+        }
+    }
+    println("Time taken WITHOUT index: $timeWithoutIndex ms")
 ```
 
-Example 2: Add an index and search again
+**Example 2**: Add an index and search again
 After creating an index on the email column, the same query becomes much faster. The database can now jump straight to the right row.
 
-```
-val indexCreationTime = measureTimeMillis {
-statement.execute("CREATE INDEX idx_email ON Users(email)")
-}
-println("Index created successfully in $indexCreationTime ms.")
-
-// Search again, now using the index
-val timeWithIndex = measureTimeMillis {
-val rs = statement.executeQuery("SELECT * FROM Users WHERE email = '$targetEmail'")
-if (rs.next()) {
-println("Found user (with index): ${rs.getString("name")}")
-}
-}
-println("Time taken WITH index: $timeWithIndex ms")
+```kotlin
+    val indexCreationTime = measureTimeMillis {
+        statement.execute("CREATE INDEX idx_email ON Users(email)")
+        }
+        println("Index created successfully in $indexCreationTime ms.")
+    
+        // Search again, now using the index
+        val timeWithIndex = measureTimeMillis {
+        val rs = statement.executeQuery("SELECT * FROM Users WHERE email = '$targetEmail'")
+        if (rs.next()) {
+        println("Found user (with index): ${rs.getString("name")}")
+        }
+    }
+    println("Time taken WITH index: $timeWithIndex ms")
 ```
 
 You’ll notice a difference in times when you run the simulation with large user counts.
