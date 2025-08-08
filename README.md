@@ -87,7 +87,7 @@ The B-Tree for our example program will look similar to this diagram:
 
 The following examples are from the actual simulation code.
 
-**Example 1**: Search without an index
+**Part 1**: Search without an index
 This query works, but it’s slow for large datasets. The database must scan every row in the Users table until it finds a match.
 
 ```kotlin
@@ -100,7 +100,7 @@ This query works, but it’s slow for large datasets. The database must scan eve
     println("Time taken WITHOUT index: $timeWithoutIndex ms")
 ```
 
-**Example 2**: Add an index and search again
+**Part 2**: Add an index and search again
 After creating an index on the email column, the same query becomes much faster. The database can now jump straight to the right row.
 
 ```kotlin
