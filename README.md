@@ -2,6 +2,10 @@
 
 A TecoTalk for the Hero Tech Course 2025.
 
+## Summary
+
+Indexes speed up queries in large datasets by helping databases avoid full table scans. Instead of checking every row one by one, the database uses a fast, tree-based structure (usually a B-Tree) to find what it needs in just a few steps. This makes read operations much faster, though it slightly slows down writes and takes up extra space. In this session, we’ll simulate and observe these trade-offs using Kotlin code.
+
 ---
 
 ## What are Database Indexes?
@@ -52,6 +56,15 @@ The B-Tree for our example program will look similar to this diagram:
 
 ---
 
+## Warnings, Edge Cases, and Common Mistakes
+
+- Index misuse: Adding indexes on every column slows down write performance and bloats storage. Only index columns you filter or join on frequently. 
+- Write-heavy workloads: In systems with frequent updates or inserts, too many indexes can cause significant performance issues. 
+- Wrong data type: If you use an index on a calculated or transformed field (e.g., LOWER(email)), the database may ignore the index unless you create a specific function-based index. 
+- Partial matches: Indexes on a single column help with exact matches, but not always with partial text searches unless the DB supports it (e.g., LIKE 'abc%' can use an index, but LIKE '%abc' usually cannot).
+
+---
+
 ## Simulation
 
 ### How To
@@ -69,6 +82,44 @@ The B-Tree for our example program will look similar to this diagram:
 4.  Report the numbers to the group.
 
 5.  Repeat for all value pairs in below Results Table.
+
+### Code excerpts
+
+The following examples are from the actual simulation code.
+
+Example 1: Search without an index
+This query works, but it’s slow for large datasets. The database must scan every row in the Users table until it finds a match.
+
+```
+val timeWithoutIndex = measureTimeMillis {
+val rs = statement.executeQuery("SELECT * FROM Users WHERE email = '$targetEmail'")
+if (rs.next()) {
+println("Found user (without index): ${rs.getString("name")}")
+}
+}
+println("Time taken WITHOUT index: $timeWithoutIndex ms")
+```
+
+Example 2: Add an index and search again
+After creating an index on the email column, the same query becomes much faster. The database can now jump straight to the right row.
+
+```
+val indexCreationTime = measureTimeMillis {
+statement.execute("CREATE INDEX idx_email ON Users(email)")
+}
+println("Index created successfully in $indexCreationTime ms.")
+
+// Search again, now using the index
+val timeWithIndex = measureTimeMillis {
+val rs = statement.executeQuery("SELECT * FROM Users WHERE email = '$targetEmail'")
+if (rs.next()) {
+println("Found user (with index): ${rs.getString("name")}")
+}
+}
+println("Time taken WITH index: $timeWithIndex ms")
+```
+
+You’ll notice a difference in times when you run the simulation with large user counts.
 
 ### Results
 
